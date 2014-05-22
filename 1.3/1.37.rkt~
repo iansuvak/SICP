@@ -1,0 +1,22 @@
+#lang planet neil/sicp
+;Exercise 1.37
+
+; recursive
+(define (cont-frac n d k)
+  (define (helper step)
+    (if (> step k)
+        0
+        (/ (n step) (+ (d step) (helper (+ step 1))))))
+  (helper 1)
+  )
+
+; PHI = 1.6180555555555558
+(/ 1 (cont-frac (lambda (x) 1.00) (lambda (x) 1.00) 12)) ; takes 12 steps
+
+
+;iterative
+(define (cont-frac n d k)
+  (define (iter step result)
+    (if (> step k)
+        0
+        (
