@@ -1,0 +1,32 @@
+#lang planet neil/sicp
+;Exercise 1.46
+
+(define (iterative-improve good-enough? improve)
+  (lambda (guess)
+    (define (iterate x)
+      (if (good-enough? x)
+          x
+          (iterate 
+           (improve x))))
+    (iterate guess)))
+
+(define (sqrt y)
+  (define (sqrt-good-enough? y)
+    (lambda (guess) (< (abs (- (square guess) y)) 0.001)))
+  (define (sqrt-improve y)
+    (lambda (guess) (average guess (/ y guess))))
+  ((iterative-improve (sqrt-good-enough? y) (sqrt-improve y)) 1.0))
+
+(define (fixed-point f x)
+  (define tolerance 0.00001)
+  (define (close-enough? g)
+    (lambda (guess) (< (abs (- guess (g guess))) tolerance)))
+  (define (improve g)
+    (lambda (guess) (f guess)))
+  ((iterative-improve (close-enough? f) (improve f)) x))
+
+
+
+; helpers
+(define (square x) (* x x))
+(define (average a b) (/ (+ a b) 2))
