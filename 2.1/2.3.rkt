@@ -6,10 +6,42 @@
   (let ((B (make-point (x-point C) (y-point A)))
         (D (make-point (x-point A) (y-point C))))
     (cons (cons A B) (cons C D))))
+(define (ptA rect)
+  (car (car rect)))
+(define (ptB rect)
+  (cdr (car rect)))
+(define (ptC rect)
+  (car (cdr rect)))
+(define (ptD rect)
+  (cdr (cdr rect)))
 
-(define (get-dimensions rect)
+(define (make-rect2 A x y)
+  (let ((B (make-point (+ x (x-point A)) (y-point A)))
+        (C (make-point (+ x (x-point A)) (+ (y-point A) y)))
+        (D (make-point (x-point A) (+ (y-point A) y))))
+        (cons (cons A B) (cons C D))))
+
+
+(define (rectangle-dimensions rect)
+  (cons 
+   (length-segment (make-segment (ptA rect) (ptB rect)))
+   (length-segment (make-segment (ptA rect) (ptD rect)))))
+
+(define (area-rectangle rect)
+  (let ((dim (rectangle-dimensions rect)))
+        (* (car dim) (cdr dim))))
+
+
+(define (perimeter-rectangle rect)
+  (let ((dim (rectangle-dimensions rect)))
+        (+ (* (car dim) 2) (* 2 (cdr dim)))))
   
 
+(define (length-segment seg)
+  (let ((x-delta (abs(- (x-point (start-segment seg)) (x-point (end-segment seg)))))
+        (y-delta (abs(- (y-point (start-segment seg)) (y-point (end-segment seg))))))
+    (sqrt (+ (square x-delta) (square y-delta)))))
+  
 ; All of 2.2 below
 (define (make-point x y)
   (cons x y))
@@ -24,10 +56,6 @@
   (car segment))
 (define (end-segment segment)
   (cdr segment))
-  
-(define (length-segment seg)
-  (x-point (start-segment seg)
-           )) ; unfinished
   
 
 (define (midpoint-segment segment)
@@ -48,3 +76,13 @@
   (display ",")
   (display (y-point p))
   (display ")"))
+
+(define (square x) (* x x))
+
+; testing
+
+(area-rectangle (make-rectangle (make-point 0 0) (make-point 4 3)))
+(perimeter-rectangle (make-rectangle (make-point 0 0) (make-point 4 3)))
+
+(area-rectangle (make-rect2 (make-point 2 3) 4 1))
+(perimeter-rectangle (make-rect2 (make-point 2 3) 4 1))
